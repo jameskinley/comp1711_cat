@@ -39,6 +39,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
     free(inputCopy);
 }
 
+// Helper function to utilise the 'tokeniseRecord' function to populate a FITNESS_DATA struct.
 FITNESS_DATA toFitnessData(char line[1024])
 {
     FITNESS_DATA data;
@@ -46,6 +47,7 @@ FITNESS_DATA toFitnessData(char line[1024])
 
     tokeniseRecord(line, delimiter, data.date, data.time, tempSteps);
 
+    // cast the tempSteps to an integer
     data.steps = atoi(tempSteps);
 
     return data;
@@ -61,8 +63,10 @@ int main(int argc, char *argv[])
     char tempLine[1024];
     int lineNum = 0;
 
+    // Adapted from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c
     while(fgets(tempLine, 1024, fileStream))
     {
+        // Only print out the first 3 lines
         if(lineNum < 3)
         {
             data[lineNum] = toFitnessData(tempLine);
@@ -74,7 +78,8 @@ int main(int argc, char *argv[])
     fclose(fileStream);
 
     printf("Number of records in file: %d\n", lineNum);
-
+    
+    //Prints the first 3 rows in the file.
     for (int i = 0; i < 3; i++)
     {
         printf("%s/%s/%d\n", data[i].date, data[i].time, data[i].steps);
