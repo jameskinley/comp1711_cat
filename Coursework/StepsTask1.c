@@ -59,17 +59,16 @@ int main(int argc, char *argv[])
     FILE* fileStream = fopen(argv[1], "r");
     FITNESS_DATA data[3];
 
-    char currentRecord[1024];
-    char tempLine[1024];
+    char buffer[1024];
     int lineNum = 0;
 
-    // Adapted from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    while(fgets(tempLine, 1024, fileStream))
+    // Learnt from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c
+    while(fgets(buffer, 1024, fileStream))
     {
         // Only print out the first 3 lines
         if(lineNum < 3)
         {
-            data[lineNum] = toFitnessData(tempLine);
+            data[lineNum] = toFitnessData(buffer);
         }
 
         lineNum++;
