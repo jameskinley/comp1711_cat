@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     // Learnt from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c
     while(fgets(buffer, 1024, fileStream))
     {
-        // Only print out the first 3 lines
+        // Only store the first 3 lines for the time being
         if(lineNum < 3)
         {
             data[lineNum] = toFitnessData(buffer);
