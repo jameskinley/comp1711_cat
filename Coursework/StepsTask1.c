@@ -54,15 +54,15 @@ FITNESS_DATA toFitnessData(char line[1024])
 }
 
 // Complete the main function
-int main(int argc, char *argv[]) 
+int main() 
 {
-    FILE* fileStream = fopen(argv[1], "r");
+    FILE* fileStream = fopen("FitnessData_2023.csv", "r");
     FITNESS_DATA data[3];
 
     char buffer[1024];
     int lineNum = 0;
 
-    // Learnt from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c
+    // Learnt from : https://stackoverflow.com/questions/12911299/read-csv-file-in-c (prior to the C Bootcamp that covered this!)
     while(fgets(buffer, 1024, fileStream))
     {
         // Only store the first 3 lines for the time being
