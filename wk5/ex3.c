@@ -1,12 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+//#include <math.h>
 #include <time.h>
 #include "point.h"
 
-double euclidianDistance(point point1, point point2)
+double absolute(double value)
+{
+    if(value < 0)
+    {
+        return value * -1;
+    }
+    return value;
+}
+
+//using Netwton-Raphson
+double sqrt(double value)
+{
+    double estimate = 1.0;
+    double tolerance = 0.001;
+
+    while(absolute(value / estimate - estimate) > tolerance)
+    {
+        estimate = (estimate + value / estimate) / 2.0;
+    }
+
+    return estimate;
+}
+
+double square(double value)
+{
+    return value * value;
+}
+
+/* double euclidianDistance(point point1, point point2)
 {
     return pow(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2), 0.5);
+} */
+
+double euclidianDistance(point point1, point point2)
+{
+    return sqrt(square(point1.x - point2.x) + square(point1.y - point2.y));
 }
 
 double minimumDistance(point points[], int n)
