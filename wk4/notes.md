@@ -19,6 +19,10 @@
 
 ## perror([error]) - `Output an error`
 
+## atoi(char[]) - `ascii to integer`
+## atof(char[]) - `ascii to float`
+
 # Header files
 ## Compile with: `gcc headerfile.h mainfile.c -o outputfile.exes`
 ## Can use `#ifndef UTILS_H #define UTILS_H (code) #endif /* UTILS_H */`
+### Header files often only have forward declarations for functions - we can supply definitions in separate files.
