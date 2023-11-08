@@ -14,6 +14,8 @@ typedef struct
     int steps;
 } FITNESS_DATA;
 
+void executeInstruction(const char command);
+
 // Helper function prototypes
 void tokeniseRecord(const char *input, const char *delimiter, char *date, char *time, char *steps);
 

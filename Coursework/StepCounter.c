@@ -7,6 +7,9 @@
 
 // Define any additional variables here
 // Global variables for filename and FITNESS_DATA array
+char *filename;
+FITNESS_DATA *fitnessData;
+int fileLength;
 
 // This is your helper function. Do not change it in any way.
 // Inputs: character array representing a row; the delimiter character
@@ -40,13 +43,33 @@ void tokeniseRecord(const char *input, const char *delimiter,
     free(inputCopy);
 }
 
+void executeInstruction(const char command)
+{
+    switch (command)
+    {
+        case 'A':
+            fitnessData = loadFile("FitnessData_2023.csv", fileLength);
+            executeInstruction(getOption());
+            break;
+            
+        case 'B':
+            printf("Total records: %d", fileLength);
+            break;
+
+        case 'C':
+            break;
+        case 'D':
+            break;
+        case 'F':
+            break;
+        default:
+            break;
+    }
+}
+
 // Complete the main function
 int main()
 {
-    int length;
-    FITNESS_DATA *data = loadFile("FitnessData_2023.csv", &length);
-
-    printf("Found %d records.", length);
-
+    executeInstruction(getOption());
     return 0;
 }
