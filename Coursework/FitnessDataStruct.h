@@ -75,6 +75,84 @@ FITNESS_DATA *loadFile(const char *fileName, int *length)
     return NULL;
 }
 
+FITNESS_DATA getFewestSteps(FITNESS_DATA *array, int length)
+{
+    int fewest = INT_MAX;
+    FITNESS_DATA fewestData;
+
+    for (int i = 0; i < length; i++)
+    {
+        if (array[i].steps < fewest)
+        {
+            fewest = array[i].steps;
+            fewestData = array[i];
+        }
+    }
+
+    return fewestData;
+}
+
+FITNESS_DATA getMostSteps(FITNESS_DATA *array, int length)
+{
+    int max = -1;
+    FITNESS_DATA maxData;
+
+    for (int i = 0; i < length; i++)
+    {
+        if (array[i].steps > max)
+        {
+            max = array[i].steps;
+            maxData = array[i];
+        }
+    }
+
+    return maxData;
+}
+
+int getMeanStepCount(FITNESS_DATA *array, const int length)
+{
+    int mean = 0;
+
+    for (int i = 0; i < length; i++)
+    {
+        mean += array[i].steps;
+    }
+    
+    return mean / length;
+}
+
+void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length, FITNESS_DATA start, FITNESS_DATA end)
+{
+    short foundPeriod = -1;
+    int currentPeriodLength = 0;
+    int maxPeriodLength = 0;
+
+    for (int i = 0; i < length; i++)
+    {
+        if(foundPeriod == -1 && array[i].steps > 500)
+        {
+            foundPeriod = i;
+            currentPeriodLength = 1;
+        }
+        else if(array[i].steps > 500)
+        {
+            currentPeriodLength++;
+        }
+        else if(foundPeriod != -1)
+        {
+            foundPeriod = -1;
+            if(currentPeriodLength > maxPeriodLength)
+            {
+                maxPeriodLength = currentPeriodLength;
+                start = array[foundPeriod];
+                end = array[i];
+            }
+            currentPeriodLength = 0;
+        }
+    }
+    
+}
+
 void renderMenu()
 {
     printf("Menu Options:\nA: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter choice: ");

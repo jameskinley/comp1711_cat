@@ -10,6 +10,7 @@
 char *filename;
 FITNESS_DATA *fitnessData;
 int fileLength;
+short terminate = 0;
 
 // This is your helper function. Do not change it in any way.
 // Inputs: character array representing a row; the delimiter character
@@ -43,33 +44,68 @@ void tokeniseRecord(const char *input, const char *delimiter,
     free(inputCopy);
 }
 
+void getFileName()
+{
+    printf("\nInput filename: ");
+    scanf("%s", filename);
+}
+
 void executeInstruction(const char command)
 {
     switch (command)
     {
-        case 'A':
-            fitnessData = loadFile("FitnessData_2023.csv", fileLength);
-            executeInstruction(getOption());
-            break;
-            
-        case 'B':
-            printf("Total records: %d", fileLength);
-            break;
+    case 'A':
+        getFileName();
+        fitnessData = loadFile(filename, fileLength);
 
-        case 'C':
-            break;
-        case 'D':
-            break;
-        case 'F':
-            break;
-        default:
-            break;
+        if (fitnessData == NULL)
+        {
+            printf("\nError: Could not find or open the file.");
+            terminate = 1;
+        }
+        else
+        {
+            printf("\nFile successfully loaded.");
+        }
+        break;
+
+    case 'B':
+        printf("\nTotal records: %d", fileLength);
+        break;
+
+    case 'C':
+        FITNESS_DATA temp = getFewestSteps(fitnessData, fileLength);
+        printf("\nFewest steps: %s %s", temp.date, temp.time);
+        break;
+
+    case 'D':
+        FITNESS_DATA temp = getMostSteps(fitnessData, fileLength);
+        printf("\nLargest steps: %s %s", temp.date, temp.time);
+        break;
+
+    case 'E':
+        printf("\nMean step count: %d", getMeanStepCount(fitnessData, fileLength));
+        break;
+
+    case 'F':
+        FITNESS_DATA temp1, temp2;
+        getLongestFiveHunPeriod(fitnessData, fileLength, temp1, temp2);
+        printf("\nLongest period start: %s %s\nLongest period end: %s %s", temp1.date, temp1.time, temp2.date, temp2.time);
+        break;
+
+    default:
+        terminate = 1;
+        break;
     }
 }
 
 // Complete the main function
 int main()
 {
-    executeInstruction(getOption());
+    while (terminate != 1)
+    {
+        executeInstruction(getOption());
+    }
+
     return 0;
 }
