@@ -2,6 +2,7 @@
 #ifndef FITNESS_DATA_STRUCT_H
 #define FITNESS_DATA_STRUCT_H
 
+#include <limits.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -127,7 +128,7 @@ void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
 
     short foundPeriod = -1;
     int currentPeriodLength = 0;
-    int maxPeriodLength = 0;
+    int maxPeriodLength = -1;
 
     for (int i = 0; i < length; i++)
     {
@@ -142,18 +143,17 @@ void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
         }
         else if(foundPeriod != -1)
         {
-            foundPeriod = -1;
             if(currentPeriodLength > maxPeriodLength)
             {
                 maxPeriodLength = currentPeriodLength;
                 start = array[foundPeriod];
                 end = array[i];
             }
+            foundPeriod = -1;
             currentPeriodLength = 0;
         }
     }
-    
-    printf("\nLongest period start: %s %s\nLongest period end: %s %s", start.date, start.time, start.date, start.time);
+    printf("\nLongest period start: %s %s\nLongest period end: %s %s", start.date, start.time, end.date, end.time);
 }
 
 void renderMenu()
