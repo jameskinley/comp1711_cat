@@ -7,7 +7,7 @@
 
 // Define any additional variables here
 // Global variables for filename and FITNESS_DATA array
-char *filename;
+char filename[100];
 FITNESS_DATA *fitnessData;
 int fileLength;
 short terminate = 0;
@@ -52,11 +52,13 @@ void getFileName()
 
 void executeInstruction(const char command)
 {
+    FITNESS_DATA temp1, temp2;
+
     switch (command)
     {
     case 'A':
         getFileName();
-        fitnessData = loadFile(filename, fileLength);
+        fitnessData = loadFile(filename, &fileLength);
 
         if (fitnessData == NULL)
         {
@@ -74,13 +76,13 @@ void executeInstruction(const char command)
         break;
 
     case 'C':
-        FITNESS_DATA temp = getFewestSteps(fitnessData, fileLength);
-        printf("\nFewest steps: %s %s", temp.date, temp.time);
+        temp1 = getFewestSteps(fitnessData, fileLength);
+        printf("\nFewest steps: %s %s", temp1.date, temp1.time);
         break;
 
     case 'D':
-        FITNESS_DATA temp = getMostSteps(fitnessData, fileLength);
-        printf("\nLargest steps: %s %s", temp.date, temp.time);
+        temp1 = getMostSteps(fitnessData, fileLength);
+        printf("\nLargest steps: %s %s", temp1.date, temp1.time);
         break;
 
     case 'E':
@@ -88,9 +90,7 @@ void executeInstruction(const char command)
         break;
 
     case 'F':
-        FITNESS_DATA temp1, temp2;
-        getLongestFiveHunPeriod(fitnessData, fileLength, temp1, temp2);
-        printf("\nLongest period start: %s %s\nLongest period end: %s %s", temp1.date, temp1.time, temp2.date, temp2.time);
+        getLongestFiveHunPeriod(fitnessData, fileLength);
         break;
 
     default:

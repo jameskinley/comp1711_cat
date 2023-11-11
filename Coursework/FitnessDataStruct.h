@@ -121,8 +121,10 @@ int getMeanStepCount(FITNESS_DATA *array, const int length)
     return mean / length;
 }
 
-void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length, FITNESS_DATA start, FITNESS_DATA end)
+void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
 {
+    FITNESS_DATA start, end;
+
     short foundPeriod = -1;
     int currentPeriodLength = 0;
     int maxPeriodLength = 0;
@@ -151,11 +153,12 @@ void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length, FITNES
         }
     }
     
+    printf("\nLongest period start: %s %s\nLongest period end: %s %s", start.date, start.time, start.date, start.time);
 }
 
 void renderMenu()
 {
-    printf("Menu Options:\nA: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter choice: ");
+    printf("\nMenu Options:\nA: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter choice: ");
 }
 
 char getOption()
@@ -164,7 +167,7 @@ char getOption()
     while ((int)option != 81 && ((int)option < 65 || (int)option > 70))
     {
         renderMenu();
-        scanf("%c", &option);
+        scanf(" %c", &option);
         option = (char)toupper((int)option);
 
         if ((int)option != 81 && ((int)option < 65 || (int)option > 70))
