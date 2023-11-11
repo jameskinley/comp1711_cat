@@ -147,7 +147,7 @@ void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
             {
                 maxPeriodLength = currentPeriodLength;
                 start = array[foundPeriod];
-                end = array[i];
+                end = array[i - 1];
             }
             foundPeriod = -1;
             currentPeriodLength = 0;
