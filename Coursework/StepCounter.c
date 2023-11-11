@@ -11,6 +11,7 @@ char filename[100];
 FITNESS_DATA *fitnessData;
 int fileLength;
 short terminate = 0;
+short errored = 0;
 
 // This is your helper function. Do not change it in any way.
 // Inputs: character array representing a row; the delimiter character
@@ -64,6 +65,7 @@ void executeInstruction(const char command)
         {
             printf("\nError: Could not find or open the file.");
             terminate = 1;
+            errored = 1;
         }
         else
         {
@@ -105,6 +107,11 @@ int main()
     while (terminate != 1)
     {
         executeInstruction(getOption());
+    }
+
+    if(errored == 1)
+    {
+        return 1;
     }
 
     return 0;
