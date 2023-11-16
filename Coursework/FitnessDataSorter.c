@@ -43,12 +43,12 @@ short checkRowValid(FitnessData fitnessData)
 }
 
 // Helper function to utilise the 'tokeniseRecord' function to populate a FitnessData struct.
-FitnessData *toFitnessData(char line[1024])
+FitnessData toFitnessData(char line[1024])
 {
-    FitnessData *data;
+    FitnessData data;
     malloc(sizeof(FitnessData));
 
-    tokeniseRecord(line, ',', data->date, data->time, &data->steps);
+    tokeniseRecord(line, ',', data.date, data.time, &data.steps);
 
     return data;
 
@@ -75,11 +75,7 @@ FitnessData *allocateFitnessDataMemory(FILE *fileStream)
 
 FitnessData *loadFile(const char *fileName, int *length)
 {
-    printf("\n1");
     FILE *stream;
-    malloc(sizeof(FILE));
-    printf("\n2");
-
 
     if ((stream = fopen(fileName, "r")))
     {
@@ -90,7 +86,7 @@ FitnessData *loadFile(const char *fileName, int *length)
 
         while (fgets(buffer, 1024, stream))
         {
-            data[lineNum] = *toFitnessData(buffer);
+            data[lineNum] = toFitnessData(buffer);
             lineNum++;
         }
 
@@ -160,9 +156,10 @@ int main()
     {
         data = bubbleSort(data, filelength);
         writeToTsv(data);
+        printf("Data sorted and written to %s\n", filename);
         return 0;
     }
 
-    printf("\nError : invalid file\n");
+    printf("Error : invalid file\n");
     return 1;
 }
