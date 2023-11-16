@@ -26,14 +26,15 @@ short checkCorrectNumFields(char line[BUFFER_LENGTH])
     while(i < BUFFER_LENGTH && line[i] != '\0')
     {
         if(line[i] == ',') numFields++;
+        i++;
     }
 
     // return 1 (TRUE) if there are exactly 3 fields (2 separators)
     if((numFields) == 2)
     {
-        return 1;
+        return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
 bool checkNoMissingFields(char line[BUFFER_LENGTH])
@@ -44,6 +45,7 @@ bool checkNoMissingFields(char line[BUFFER_LENGTH])
     {
         if(line[i] == ',' && line[i - 1] == ',') 
             missingFields = TRUE;
+        i++;
     }
     return missingFields;
 }
@@ -81,6 +83,7 @@ bool isValidDate(char *dateToken)
         {
             foundHyphens++;
         }
+        i++;
     }
 
     if(foundHyphens == 2) return TRUE;
@@ -95,6 +98,7 @@ bool isValidTime(char *timeToken)
     while(foundSplit == FALSE && timeToken[i] != '\0')
     {
         if(timeToken[i] == ':') foundSplit == TRUE;
+        i++;
     }
     return foundSplit;
 }
@@ -220,7 +224,7 @@ FitnessData *bubbleSort(FitnessData *loadedData, const int length)
 void getFileName()
 {
     printf("\nEnter Filename: ");
-    scanf("%s ", filename);
+    scanf("%s", filename);
 }
 
 void writeToTsv(FitnessData *data)
