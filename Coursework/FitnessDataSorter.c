@@ -35,22 +35,24 @@ void tokeniseRecord(char *record, char delimiter, char *date, char *time, int *s
 
 short checkRowValid(FitnessData fitnessData)
 {
+    if(fitnessData.date == NULL || fitnessData.date == "" || fitnessData.time == NULL || fitnessData.time == "")
+    {
+        return 0;
+    }
+    return 1;
 }
 
 // Helper function to utilise the 'tokeniseRecord' function to populate a FitnessData struct.
-FitnessData toFitnessData(char line[1024])
+FitnessData *toFitnessData(char line[1024])
 {
-    FitnessData data;
-    char tempSteps[10];
+    FitnessData *data;
+    malloc(sizeof(FitnessData));
 
-    tokeniseRecord(line, ",", data.date, data.time, tempSteps);
-
-    if(tempSteps != "" && (tempSteps[0] == '0' || atoi(tempSteps) != 0))
-
-    // cast the tempSteps to an integer
-    data.steps = atoi(tempSteps);
+    tokeniseRecord(line, ',', data->date, data->time, &data->steps);
 
     return data;
+
+    //return NULL;
 }
 
 // allocates the required memory for the a given file.
@@ -73,25 +75,30 @@ FitnessData *allocateFitnessDataMemory(FILE *fileStream)
 
 FitnessData *loadFile(const char *fileName, int *length)
 {
-    FILE *fileStream;
+    printf("\n1");
+    FILE *stream;
+    malloc(sizeof(FILE));
+    printf("\n2");
 
-    if ((fileStream = fopen(fileName, "r")))
+
+    if ((stream = fopen(fileName, "r")))
     {
-        FitnessData *data = allocateFitnessDataMemory(fileStream);
+        FitnessData *data = allocateFitnessDataMemory(stream);
 
         char buffer[1024];
         int lineNum = 0;
 
-        while (fgets(buffer, 1024, fileStream))
+        while (fgets(buffer, 1024, stream))
         {
-            data[lineNum] = toFitnessData(buffer);
+            data[lineNum] = *toFitnessData(buffer);
             lineNum++;
         }
 
-        fclose(fileStream);
+        fclose(stream);
         *length = lineNum;
         return data;
     }
+
     return NULL;
 }
 
@@ -140,19 +147,22 @@ void writeToTsv(FitnessData *data)
             fprintf(fileStream, "%s\t%s\t%d\n", data[filelength - i - 1].date, data[filelength - i - 1].time, data[filelength - i - 1].steps);
         }
     }
+
+    fclose(fileStream);
 }
 
 int main()
 {
     getFileName();
-    FitnessData *data;
+    FitnessData *data = loadFile(filename, &filelength);
 
-    if ((data = loadFile(filename, filelength)) != NULL)
+    if (data != NULL)
     {
         data = bubbleSort(data, filelength);
+        writeToTsv(data);
         return 0;
     }
 
-    printf("\nError : invalid file");
+    printf("\nError : invalid file\n");
     return 1;
 }
