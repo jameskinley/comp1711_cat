@@ -2,8 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BUFFER_LENGTH 1024
+#define TRUE 1
+#define FALSE 0
+
 char filename[100];
 int filelength;
+
+typedef short bool;
 
 // Define the struct for the fitness data
 typedef struct
@@ -13,46 +19,129 @@ typedef struct
     int steps;
 } FitnessData;
 
-// Function to tokenize a record
-void tokeniseRecord(char *record, char delimiter, char *date, char *time, int *steps)
+short checkCorrectNumFields(char line[BUFFER_LENGTH])
 {
+    int i = 0;
+    int numFields = 0;
+    while(i < BUFFER_LENGTH && line[i] != '\0')
+    {
+        if(line[i] == ',') numFields++;
+    }
+
+    // return 1 (TRUE) if there are exactly 3 fields (2 separators)
+    if((numFields) == 2)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+bool checkNoMissingFields(char line[BUFFER_LENGTH])
+{
+    int i = 1;
+    short missingFields = FALSE;
+    while(missingFields == 0 && i < BUFFER_LENGTH && line[i] != '\0')
+    {
+        if(line[i] == ',' && line[i - 1] == ',') 
+            missingFields = TRUE;
+    }
+    return missingFields;
+}
+
+bool checkRowValid(char line[BUFFER_LENGTH])
+{
+    if(
+        checkCorrectNumFields(line) == TRUE && 
+        checkNoMissingFields(line) == TRUE)
+        return TRUE;
+    
+    return FALSE;
+}
+
+bool isValidNumber(char *stepToken)
+{
+    //atoi returns 0 if string cannot be converted
+    int tempStemps = atoi(stepToken);
+
+    if(stepToken[0] == '0' || tempStemps != 0)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool isValidDate(char *dateToken)
+{
+    int i = 0;
+    int foundHyphens = 0;
+
+    while(foundHyphens != 2 && dateToken[i] != '\0')
+    {
+        if(dateToken[i] == '-')
+        {
+            foundHyphens++;
+        }
+    }
+
+    if(foundHyphens == 2) return TRUE;
+    
+    return FALSE;
+}
+
+bool isValidTime(char *timeToken)
+{
+    int i = 0;
+    bool foundSplit = FALSE;
+    while(foundSplit == FALSE && timeToken[i] != '\0')
+    {
+        if(timeToken[i] == ':') foundSplit == TRUE;
+    }
+    return foundSplit;
+}
+
+// Function to tokenize a record
+bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *steps)
+{
+    if(checkRowValid(record) == FALSE) return FALSE;
+
     char *ptr = strtok(record, &delimiter);
     if (ptr != NULL)
     {
+        if(isValidDate(ptr) == FALSE) return FALSE;
+
         strcpy(date, ptr);
         ptr = strtok(NULL, &delimiter);
         if (ptr != NULL)
         {
+            if(isValidTime(ptr) == FALSE) return FALSE;
+
             strcpy(time, ptr);
             ptr = strtok(NULL, &delimiter);
             if (ptr != NULL)
             {
+                if(isValidNumber(ptr) == FALSE) return FALSE;
+
                 *steps = atoi(ptr);
+                return TRUE;
             }
         }
     }
-}
 
-short checkRowValid(FitnessData fitnessData)
-{
-    if(fitnessData.date == NULL || fitnessData.date == "" || fitnessData.time == NULL || fitnessData.time == "")
-    {
-        return 0;
-    }
-    return 1;
+    return FALSE;
 }
 
 // Helper function to utilise the 'tokeniseRecord' function to populate a FitnessData struct.
-FitnessData toFitnessData(char line[1024])
+FitnessData toFitnessData(char line[BUFFER_LENGTH])
 {
     FitnessData data;
     malloc(sizeof(FitnessData));
 
-    tokeniseRecord(line, ',', data.date, data.time, &data.steps);
+    if(tokeniseRecord(line, ',', data.date, data.time, &data.steps) == TRUE) 
+        return data;
+
+    data.steps = -1;
 
     return data;
-
-    //return NULL;
 }
 
 // allocates the required memory for the a given file.
@@ -60,10 +149,10 @@ FitnessData toFitnessData(char line[1024])
 // https://stackoverflow.com/questions/28931034/how-to-correctly-allocate-memory-for-an-array-of-structs-in-c
 FitnessData *allocateFitnessDataMemory(FILE *fileStream)
 {
-    char buffer[1024];
+    char buffer[BUFFER_LENGTH];
     int size = 0;
 
-    while (fgets(buffer, 1024, fileStream))
+    while (fgets(buffer, BUFFER_LENGTH, fileStream))
     {
         size++;
     }
@@ -81,12 +170,18 @@ FitnessData *loadFile(const char *fileName, int *length)
     {
         FitnessData *data = allocateFitnessDataMemory(stream);
 
-        char buffer[1024];
+        char buffer[BUFFER_LENGTH];
         int lineNum = 0;
 
-        while (fgets(buffer, 1024, stream))
+        while (fgets(buffer, BUFFER_LENGTH, stream))
         {
             data[lineNum] = toFitnessData(buffer);
+
+            if(data[lineNum].steps == -1)
+            {
+                return NULL;
+            }
+
             lineNum++;
         }
 
@@ -125,7 +220,7 @@ FitnessData *bubbleSort(FitnessData *loadedData, const int length)
 void getFileName()
 {
     printf("\nEnter Filename: ");
-    scanf("%s", filename);
+    scanf("%s ", filename);
 }
 
 void writeToTsv(FitnessData *data)
