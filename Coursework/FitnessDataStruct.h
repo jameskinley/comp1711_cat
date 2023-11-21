@@ -5,7 +5,6 @@
 #include <limits.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <math.h>
 #include <stdlib.h>
 
 // Define an appropriate struct
@@ -120,7 +119,7 @@ int getMeanStepCount(FITNESS_DATA *array, const int length)
         mean += array[i].steps;
     }
     
-    return (int)roundf((float)mean / (float)length);
+    return mean / length;
 }
 
 void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
