@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-void multiplyMatrices(int x, int y, float m[x][y], float n[y][x], float output[x][x])
+void multiplyMatrices(int x, int y, int m[x][y], int n[y][x], int output[x][x])
 {
     for (int i = 0; i < x; i++)
     {
@@ -24,19 +24,19 @@ void multiplyMatrices(int x, int y, float m[x][y], float n[y][x], float output[x
     }
 }
 
-void renderMatrix(int x, int y, float matrix[x][y])
+void renderMatrix(int x, int y, int matrix[x][y])
 {
     for (int i = 0; i < x; i++)
     {
         for (int j = 0; j < y; j++)
         {
-            printf("%03.1f ", matrix[i][j]);
+            printf("%012d ", matrix[i][j]);
         }
         printf("\n");
     }
 }
 
-void populateMatrix(int x, int y, float matrix[x][y])
+void populateMatrix(int x, int y, int matrix[x][y])
 {
     for (int i = 0; i < x; i++)
     {
@@ -50,9 +50,9 @@ void populateMatrix(int x, int y, float matrix[x][y])
 
 int main()
 {
-    float matrix_1[2][3];
-    float matrix_2[3][2];
-    float result[2][2];
+    int matrix_1[2][3];
+    int matrix_2[3][2];
+    int result[2][2];
 
     populateMatrix(2, 3, matrix_1);
     populateMatrix(3, 2, matrix_2);
