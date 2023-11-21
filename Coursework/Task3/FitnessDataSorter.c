@@ -23,14 +23,15 @@ short checkCorrectNumFields(char line[BUFFER_LENGTH])
 {
     int i = 0;
     int numFields = 0;
-    while(i < BUFFER_LENGTH && line[i] != '\0')
+    while (i < BUFFER_LENGTH && line[i] != '\0')
     {
-        if(line[i] == ',') numFields++;
+        if (line[i] == ',')
+            numFields++;
         i++;
     }
 
     // return 1 (TRUE) if there are exactly 3 fields (2 separators)
-    if((numFields) == 2)
+    if ((numFields) == 2)
     {
         return TRUE;
     }
@@ -42,31 +43,39 @@ bool checkNoMissingFields(char line[BUFFER_LENGTH])
 {
     int i = 1;
     short missingFields = FALSE;
-    while(missingFields == 0 && i < BUFFER_LENGTH && line[i] != '\0')
+    while (missingFields == 0 && i < BUFFER_LENGTH && line[i] != '\0')
     {
-        if(line[i] == ',' && line[i - 1] == ',') 
+        if (line[i] == ',' && line[i - 1] == ',')
             missingFields = TRUE;
         i++;
     }
     return missingFields;
 }
 
+bool isEmpty(char *token)
+{
+    if (token[0] == ' ' || token[0] == '\0')
+        return FALSE;
+
+    return TRUE;
+}
+
 bool checkRowValid(char line[BUFFER_LENGTH])
 {
-    if(
-        checkCorrectNumFields(line) == TRUE && 
+    if (
+        checkCorrectNumFields(line) == TRUE &&
         checkNoMissingFields(line) == FALSE)
-        {
-            return TRUE;
-        }
-    
+    {
+        return TRUE;
+    }
+
     return FALSE;
 }
 
 // Function to tokenize a record
 bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *steps)
 {
-    if(checkRowValid(record) == FALSE) 
+    if (checkRowValid(record) == FALSE)
     {
         return FALSE;
     }
@@ -74,14 +83,24 @@ bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *s
     char *ptr = strtok(record, &delimiter);
     if (ptr != NULL)
     {
+        if (isEmpty(ptr) == FALSE)
+            return FALSE;
+
         strcpy(date, ptr);
         ptr = strtok(NULL, &delimiter);
         if (ptr != NULL)
         {
+            if (isEmpty(ptr) == FALSE)
+                return FALSE;
+
             strcpy(time, ptr);
             ptr = strtok(NULL, &delimiter);
             if (ptr != NULL)
             {
+                if (isEmpty(ptr) == FALSE)
+                {
+                    return FALSE;
+                }
                 *steps = atoi(ptr);
                 return TRUE;
             }
@@ -97,7 +116,7 @@ FitnessData toFitnessData(char line[BUFFER_LENGTH])
     FitnessData data;
     void *loc = malloc(sizeof(FitnessData));
 
-    if(tokeniseRecord(line, ',', data.date, data.time, &data.steps) == TRUE) 
+    if (tokeniseRecord(line, ',', data.date, data.time, &data.steps) == TRUE)
     {
         return data;
     }
@@ -139,7 +158,7 @@ FitnessData *loadFile(const char *fileName, int *length)
         {
             data[lineNum] = toFitnessData(buffer);
 
-            if(data[lineNum].steps == -1)
+            if (data[lineNum].steps == -1)
             {
                 return NULL;
             }
@@ -191,14 +210,7 @@ void writeToTsv(FitnessData *data)
 
     for (int i = 0; i < filelength; i++)
     {
-        if (i == filelength - 1)
-        {
-            fprintf(fileStream, "%s\t%s\t%d", data[filelength - i - 1].date, data[filelength - i - 1].time, data[filelength - i - 1].steps);
-        }
-        else
-        {
-            fprintf(fileStream, "%s\t%s\t%d\n", data[filelength - i - 1].date, data[filelength - i - 1].time, data[filelength - i - 1].steps);
-        }
+        fprintf(fileStream, "%s\t%s\t%d\n", data[filelength - i - 1].date, data[filelength - i - 1].time, data[filelength - i - 1].steps);
     }
 
     fclose(fileStream);
