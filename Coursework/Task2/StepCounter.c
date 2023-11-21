@@ -47,7 +47,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 void getFileName()
 {
-    printf("\nInput filename: ");
+    printf("Input filename: ");
     scanf("%s", filename);
 }
 
@@ -63,7 +63,7 @@ void executeInstruction(const char command)
 
         if (fitnessData == NULL)
         {
-            printf("Error: Could not find or open the file.");
+            printf("Error: Could not find or open the file.\n");
             terminate = 1;
             errored = 1;
         }

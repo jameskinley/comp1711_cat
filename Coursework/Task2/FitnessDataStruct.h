@@ -177,7 +177,7 @@ char getOption()
 
         if ((int)option != 81 && ((int)option < 65 || (int)option > 70))
         {
-            printf("\nInvalid choice. Try again.");
+            printf("Invalid choice. Try again.");
         }
     }
 
