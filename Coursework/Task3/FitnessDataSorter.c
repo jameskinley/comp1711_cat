@@ -34,6 +34,7 @@ short checkCorrectNumFields(char line[BUFFER_LENGTH])
     {
         return TRUE;
     }
+
     return FALSE;
 }
 
@@ -54,77 +55,33 @@ bool checkRowValid(char line[BUFFER_LENGTH])
 {
     if(
         checkCorrectNumFields(line) == TRUE && 
-        checkNoMissingFields(line) == TRUE)
-        return TRUE;
-    
-    return FALSE;
-}
-
-bool isValidNumber(char *stepToken)
-{
-    //atoi returns 0 if string cannot be converted
-    int tempStemps = atoi(stepToken);
-
-    if(stepToken[0] == '0' || tempStemps != 0)
-    {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-bool isValidDate(char *dateToken)
-{
-    int i = 0;
-    int foundHyphens = 0;
-
-    while(foundHyphens != 2 && dateToken[i] != '\0')
-    {
-        if(dateToken[i] == '-')
+        checkNoMissingFields(line) == FALSE)
         {
-            foundHyphens++;
+            return TRUE;
         }
-        i++;
-    }
-
-    if(foundHyphens == 2) return TRUE;
     
     return FALSE;
-}
-
-bool isValidTime(char *timeToken)
-{
-    int i = 0;
-    bool foundSplit = FALSE;
-    while(foundSplit == FALSE && timeToken[i] != '\0')
-    {
-        if(timeToken[i] == ':') foundSplit == TRUE;
-        i++;
-    }
-    return foundSplit;
 }
 
 // Function to tokenize a record
 bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *steps)
 {
-    if(checkRowValid(record) == FALSE) return FALSE;
+    if(checkRowValid(record) == FALSE) 
+    {
+        return FALSE;
+    }
 
     char *ptr = strtok(record, &delimiter);
     if (ptr != NULL)
     {
-        if(isValidDate(ptr) == FALSE) return FALSE;
-
         strcpy(date, ptr);
         ptr = strtok(NULL, &delimiter);
         if (ptr != NULL)
         {
-            if(isValidTime(ptr) == FALSE) return FALSE;
-
             strcpy(time, ptr);
             ptr = strtok(NULL, &delimiter);
             if (ptr != NULL)
             {
-                if(isValidNumber(ptr) == FALSE) return FALSE;
-
                 *steps = atoi(ptr);
                 return TRUE;
             }
@@ -138,10 +95,12 @@ bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *s
 FitnessData toFitnessData(char line[BUFFER_LENGTH])
 {
     FitnessData data;
-    malloc(sizeof(FitnessData));
+    void *loc = malloc(sizeof(FitnessData));
 
     if(tokeniseRecord(line, ',', data.date, data.time, &data.steps) == TRUE) 
+    {
         return data;
+    }
 
     data.steps = -1;
 
@@ -170,10 +129,9 @@ FitnessData *loadFile(const char *fileName, int *length)
 {
     FILE *stream;
 
-    if ((stream = fopen(fileName, "r")))
+    if ((stream = fopen(fileName, "r")) != NULL)
     {
         FitnessData *data = allocateFitnessDataMemory(stream);
-
         char buffer[BUFFER_LENGTH];
         int lineNum = 0;
 
