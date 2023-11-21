@@ -153,7 +153,7 @@ void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
             currentPeriodLength = 0;
         }
     }
-    printf("\nLongest period start: %s %s\nLongest period end: %s %s", start.date, start.time, end.date, end.time);
+    printf("Longest period start: %s %s\nLongest period end: %s %s", start.date, start.time, end.date, end.time);
 }
 
 void renderMenu()

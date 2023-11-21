@@ -63,32 +63,32 @@ void executeInstruction(const char command)
 
         if (fitnessData == NULL)
         {
-            printf("\nError: Could not find or open the file.");
+            printf("Error: Could not find or open the file.");
             terminate = 1;
             errored = 1;
         }
         else
         {
-            printf("\nFile successfully loaded.");
+            printf("File successfully loaded.");
         }
         break;
 
     case 'B':
-        printf("\nTotal records: %d", fileLength);
+        printf("Total records: %d", fileLength);
         break;
 
     case 'C':
         temp1 = getFewestSteps(fitnessData, fileLength);
-        printf("\nFewest steps: %s %s", temp1.date, temp1.time);
+        printf("Fewest steps: %s %s", temp1.date, temp1.time);
         break;
 
     case 'D':
         temp1 = getMostSteps(fitnessData, fileLength);
-        printf("\nLargest steps: %s %s", temp1.date, temp1.time);
+        printf("Largest steps: %s %s", temp1.date, temp1.time);
         break;
 
     case 'E':
-        printf("\nMean step count: %d", getMeanStepCount(fitnessData, fileLength));
+        printf("Mean step count: %d", getMeanStepCount(fitnessData, fileLength));
         break;
 
     case 'F':
