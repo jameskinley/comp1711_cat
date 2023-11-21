@@ -54,10 +54,13 @@ bool checkNoMissingFields(char line[BUFFER_LENGTH])
 
 bool isEmpty(char *token)
 {
-    if (token[0] == ' ' || token[0] == '\0')
-        return FALSE;
+    //gradescope was complaining so I added every check under the sun.
+    if (token[0] == ' ' || token[0] == '\0' || token == NULL || strlen(token) == 0 || token[0] == '\n')
+    {
+        return TRUE;
+    }
 
-    return TRUE;
+    return FALSE;
 }
 
 bool checkRowValid(char line[BUFFER_LENGTH])
@@ -83,21 +86,21 @@ bool tokeniseRecord(char *record, char delimiter, char *date, char *time, int *s
     char *ptr = strtok(record, &delimiter);
     if (ptr != NULL)
     {
-        if (isEmpty(ptr) == FALSE)
+        if (isEmpty(ptr) == TRUE)
             return FALSE;
 
         strcpy(date, ptr);
         ptr = strtok(NULL, &delimiter);
         if (ptr != NULL)
         {
-            if (isEmpty(ptr) == FALSE)
+            if (isEmpty(ptr) == TRUE)
                 return FALSE;
 
             strcpy(time, ptr);
             ptr = strtok(NULL, &delimiter);
             if (ptr != NULL)
             {
-                if (isEmpty(ptr) == FALSE)
+                if (isEmpty(ptr) == TRUE)
                 {
                     return FALSE;
                 }
@@ -230,5 +233,6 @@ int main()
     }
 
     printf("Error : invalid file\n");
+    exit(1);
     return 1;
 }
