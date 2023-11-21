@@ -110,6 +110,11 @@ FITNESS_DATA getMostSteps(FITNESS_DATA *array, int length)
     return maxData;
 }
 
+int roundFloat(float input)
+{
+    return (int) (input + 0.5); //way to deal with int. truncation without using math.h (thank you gradescope for not letting us use it)
+}
+
 int getMeanStepCount(FITNESS_DATA *array, const int length)
 {
     int mean = 0;
@@ -119,7 +124,7 @@ int getMeanStepCount(FITNESS_DATA *array, const int length)
         mean += array[i].steps;
     }
     
-    return mean / length;
+    return roundFloat((float)mean / (float)length);
 }
 
 void getLongestFiveHunPeriod(const FITNESS_DATA *array, const int length)
